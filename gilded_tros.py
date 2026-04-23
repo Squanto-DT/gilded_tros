@@ -39,8 +39,21 @@ class GildedTros(object):
 
     def update_quality(self):
         for item in self.items:
+            # Never touch legendary item
             if item.name == "B-DAWG Keychain":
                 continue
+            
+            item.sell_in -= 1
+            # update quality
+
+            # check if sell in = 0
+
+    def _update_quality_pre_sell_in(self, item):
+        pass
+    
+    def _update_quality_post_sell_in(self, item):
+        pass
+
 class Item:
     def __init__(self, name, sell_in, quality):
         self.name = name
