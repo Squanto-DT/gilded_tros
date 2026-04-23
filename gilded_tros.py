@@ -69,19 +69,14 @@ class GildedTros(object):
         if item.name == 'Good Wine':
             self._increase_quality(item, 2)
         elif 'Backstage passes' in item.name:
-            self._decrease_quality(item, 3)
+            item.quality = 0
         elif item.name in ["Duplicate Code", "Long Methods", "Ugly Variable Names"]:
             self._decrease_quality(item, 4)
         else:
             self._decrease_quality(item, 2)
-        
-        if item.quality < 0:
-            item.quality = 0
 
     def _increase_quality(self, item, amount=1):
-        if item.quality >= 50:
-            return
-        item.quality += amount
+        item.quality = min(50, item.quality + amount)
 
     def _decrease_quality(self, item, amount=1):
         item.quality = max(0, item.quality - amount)
