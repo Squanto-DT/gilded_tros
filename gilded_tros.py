@@ -45,27 +45,44 @@ class GildedTros(object):
             
             item.sell_in -= 1
             # update quality
-            self._update_quality_pre_sell_in(item)
-
-            # check if sell in = 0
-            if item.sell_in < 0:
+            if item.sell_in >= 0:
+                self._update_quality_pre_sell_in(item)
+            else:
                 self._update_quality_post_sell_in(item)
 
     def _update_quality_pre_sell_in(self, item):
         # 'Normal' Item
         # 'Wine of backstage pass'
-        if item.name == 'Good Wine' or 'Backstage Passes' in item.name:
+        if item.name == 'Good Wine' or 'Backstage passes' in item.name:
             item.quality += 1
             if 'Backstage passes' in item.name and item.sell_in <= 10:
                 item.quality += 1
                 if item.sell_in <= 5:
                     item.quality += 1
+            
+            # item quality cannot be more than 50
+            if item.quality >= 50:
+                item.quality = 50
+        elif item.name in ["Duplicate Code", "Long Methods", "Ugly Variable Names"]:
+            item.quality -= 2
         else:
-            pass
+            item.quality -= 1
         
     
     def _update_quality_post_sell_in(self, item):
-        pass
+        if item.name == 'Good Wine':
+            if item.quality >= 50:
+                return
+            item.quality += 2
+        elif 'Backstage passes' in item.name:
+            item.quality = 0
+        elif item.name in ["Duplicate Code", "Long Methods", "Ugly Variable Names"]:
+            item.quality -= 4
+        else:
+            item.quality -= 2
+        
+        if item.quality < 0:
+            item.quality = 0
 
 class Item:
     def __init__(self, name, sell_in, quality):
