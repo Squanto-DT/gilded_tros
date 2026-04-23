@@ -54,35 +54,38 @@ class GildedTros(object):
         # 'Normal' Item
         # 'Wine of backstage pass'
         if item.name == 'Good Wine' or 'Backstage passes' in item.name:
-            item.quality += 1
+            self._increase_quality(item)
             if 'Backstage passes' in item.name and item.sell_in <= 10:
-                item.quality += 1
+                self._increase_quality(item)
                 if item.sell_in <= 5:
-                    item.quality += 1
-            
-            # item quality cannot be more than 50
-            if item.quality >= 50:
-                item.quality = 50
+                    self._increase_quality(item)
         elif item.name in ["Duplicate Code", "Long Methods", "Ugly Variable Names"]:
-            item.quality -= 2
+            self._decrease_quality(item, 2)
         else:
-            item.quality -= 1
+            self._decrease_quality(item, 1)
         
     
     def _update_quality_post_sell_in(self, item):
         if item.name == 'Good Wine':
-            if item.quality >= 50:
-                return
-            item.quality += 2
+            self._increase_quality(item, 2)
         elif 'Backstage passes' in item.name:
-            item.quality = 0
+            self._decrease_quality(item, 3)
         elif item.name in ["Duplicate Code", "Long Methods", "Ugly Variable Names"]:
-            item.quality -= 4
+            self._decrease_quality(item, 4)
         else:
-            item.quality -= 2
+            self._decrease_quality(item, 2)
         
         if item.quality < 0:
             item.quality = 0
+
+    def _increase_quality(self, item, amount=1):
+        if item.quality >= 50:
+            return
+        item.quality += amount
+
+    def _decrease_quality(self, item, amount=1):
+        item.quality = max(0, item.quality - amount)
+
 
 class Item:
     def __init__(self, name, sell_in, quality):
