@@ -45,11 +45,24 @@ class GildedTros(object):
             
             item.sell_in -= 1
             # update quality
+            self._update_quality_pre_sell_in(item)
 
             # check if sell in = 0
+            if item.sell_in < 0:
+                self._update_quality_post_sell_in(item)
 
     def _update_quality_pre_sell_in(self, item):
-        pass
+        # 'Normal' Item
+        # 'Wine of backstage pass'
+        if item.name == 'Good Wine' or 'Backstage Passes' in item.name:
+            item.quality += 1
+            if 'Backstage passes' in item.name and item.sell_in <= 10:
+                item.quality += 1
+                if item.sell_in <= 5:
+                    item.quality += 1
+        else:
+            pass
+        
     
     def _update_quality_post_sell_in(self, item):
         pass
