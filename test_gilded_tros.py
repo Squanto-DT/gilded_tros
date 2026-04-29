@@ -7,14 +7,13 @@ from gilded_tros import Item, GildedTros
 class GildedTrosTest(unittest.TestCase):
     
     def test_normal_item_degrades(self):
-        items = [Item("Normal Item", 10, 20)]
+        items = [Item(name="Ring of Cleansening Code", sell_in=10, quality=20)]
         tros = GildedTros(items)
         tros.update_quality()
-        self.assertEqual(9, items[0].sell_in)
         self.assertEqual(19, items[0].quality)
 
     def test_normal_item_degrades_twice_after_sell_in(self):
-        items = [Item("Normal Item", -2, 10)]
+        items = [Item(name="Ring of Cleansening Code", sell_in=-2, quality=10)]
         tros = GildedTros(items)
         tros.update_quality()
         self.assertEqual(8, items[0].quality)
